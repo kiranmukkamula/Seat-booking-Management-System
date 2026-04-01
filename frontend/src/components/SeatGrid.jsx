@@ -11,6 +11,11 @@ export default function SeatGrid() {
   const [loading, setLoading] = useState(false);
   const [bookingId, setBookingId] = useState(null); // seat being booked
 
+  //tells whhic user booked the seat and vary the seats booked by logged-in user
+  const user=JSON.parse(localStorage.getItem("user"));
+  const currentUserId = user?.id;
+
+
   // Fetch seats whenever date changes
   useEffect(() => {
     fetchSeats();
@@ -36,8 +41,8 @@ export default function SeatGrid() {
 
   // Split seats into rows of 6
   const rows = [];
-  for (let i = 0; i < seats.length; i += 6) {
-    rows.push(seats.slice(i, i + 6));
+  for (let i = 0; i < seats.length; i += 10) {
+    rows.push(seats.slice(i, i + 10));
   }
 
   return (
@@ -111,6 +116,7 @@ export default function SeatGrid() {
 
           {/* Rows of seats */}
           <div className="space-y-3">
+            
             {rows.map((row, rowIdx) => (
               <div key={rowIdx} className="flex justify-center gap-3">
                 {/* Row label */}
@@ -121,7 +127,7 @@ export default function SeatGrid() {
                 {row.map((seat) => {
                   const isBooked = !!seat.user_id;
                   const isBooking = bookingId === seat.seat_number;
-
+                   const isMySeat= seat.user_id === currentUserId;
                   return (
                     <button
                       key={seat.seat_number}
@@ -133,20 +139,24 @@ export default function SeatGrid() {
                           : `Seat ${seat.seat_number} - Available`
                       }
                       className={`
-                        w-11 h-11 rounded-xl text-xs font-semibold font-body transition-all duration-200 relative
-                        ${
-                          isBooking
-                            ? "bg-yellow-100 border-2 border-yellow-300 text-yellow-600 scale-95"
-                            : isBooked
-                            ? "bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-md shadow-pink-200 cursor-not-allowed"
-                            : "bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 text-blue-600 hover:from-blue-500 hover:to-indigo-500 hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-blue-200 hover:-translate-y-0.5 cursor-pointer"
-                        }
-                      `}
-                    >
+                              w-11 h-11 rounded-xl text-xs font-semibold font-body transition-all duration-200 relative
+                              ${
+                              isBooking
+                              ? "bg-yellow-100 border-2 border-yellow-300 text-yellow-600 scale-95"
+                              : isMySeat
+                              ? "bg-gradient-to-br from-emerald-400 to-teal-400 text-white shadow-md shadow-emerald-200 cursor-not-allowed"
+                              : isBooked
+                              ? "bg-gradient-to-br from-pink-400 to-rose-500 text-white shadow-md shadow-pink-200 cursor-not-allowed"
+                              : "bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-blue-200 text-blue-600 hover:from-blue-500 hover:to-indigo-500 hover:text-white hover:border-transparent hover:shadow-lg hover:shadow-blue-200 hover:-translate-y-0.5 cursor-pointer"
+                              }
+                            `}
+                      >
                       {isBooking ? "…" : seat.seat_number}
                     </button>
                   );
                 })}
+
+
               </div>
             ))}
           </div>

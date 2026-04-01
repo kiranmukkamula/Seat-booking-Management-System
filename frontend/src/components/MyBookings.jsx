@@ -107,7 +107,7 @@ export default function MyBookings() {
                 disabled={cancellingId === b.id}
                 className="text-xs font-semibold font-body px-4 py-2 rounded-xl bg-red-50 text-red-400 hover:bg-red-500 hover:text-white border border-red-100 hover:border-transparent transition-all duration-200 disabled:opacity-50"
               >
-                {cancellingId === b.id ? "Cancelling…" : "Cancel"}
+                {cancellingId === b.id ? "Cancelling" : "Cancel"}
               </button>
             </div>
           ))}
